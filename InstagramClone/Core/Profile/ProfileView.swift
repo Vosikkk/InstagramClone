@@ -18,6 +18,8 @@ struct ProfileView: View {
         .init(.flexible(), spacing: 1),
     ]
     
+    @State private var selectedTab: Int = 0
+    
     var body: some View {
         NavigationStack {
             
@@ -26,25 +28,12 @@ struct ProfileView: View {
                 VStack(spacing: Constants.spacing) {
                     
                     HStack {
-                        profileImage
-                            .frame(
-                                width: Constants.Icon.width,
-                                height: Constants.Icon.height)
-                        
-                        Spacer()
-                        
-                        HStack(spacing: Constants.Stats.hStackSpacing) {
-                            ForEach(0..<Stat.allCases.count, id: \.self) { index in
-                                UserStatView(title: Stat.allCases[index], value: numbers[index])
-                            }
-                        }
+                        ProfileHeaderView(numbers: numbers, image: "Icon")
                     }
-                    .padding(.horizontal, Constants.Stats.padding)
                     
-                    VStack(
-                        alignment: .leading,
-                        spacing: Constants.nameVstackSpacing
-                    ) {
+                    VStack(alignment: .leading,
+                           spacing: Constants.spacingV) {
+                        
                         Text("Sasha Voskolovych")
                             .fontWeight(.semibold)
                         
@@ -54,54 +43,55 @@ struct ProfileView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal)
                     
-                    editButton
-                        .overlay(
-                            RoundedRectangle(
-                                cornerRadius: Constants.Button.cornerRadius
-                            )
-                            .stroke(.gray,
-                                    lineWidth: Constants.Button.lineWidth
-                                   )
-                        )
-                    
-                    Divider()
-                }
-                
-                LazyVGrid(columns: gridItems, spacing: Constants.lazyVspacing) {
-                    
-                    ForEach(0...15, id: \.self) { _ in
-                        Image("david-beckham2")
-                            .resizable()
-                            .scaledToFill()
+                    HStack {
+                        editButton
+                            .borderedShape(RoundedRectangle(cornerRadius:  Constants.Button.cornerRadius))
+                        
+                        shareButton
+                            .borderedShape(RoundedRectangle(cornerRadius:  Constants.Button.cornerRadius))
+                        
+                        addButton
+                            .frame(width: Constants.Button.smallSize, height: Constants.Button.height)
+                            .borderedShape(RoundedRectangle(cornerRadius:  Constants.Button.cornerRadius))
                     }
                 }
+                
+                ProfileTabView(selectedTab: $selectedTab)
             }
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    settingButton
-                    
+                    HStack(spacing: Constants.spacing) {
+                        ToolbarButton(icon: "plus.app", action: { print("Add content tapped") })
+                        ToolbarButton(icon: "line.3.horizontal") { print("Settings tapped") }
+                    }
                 }
             }
         }
-        
     }
     
-    private var settingButton: some View {
+    
+    private var editButton: some View {
         Button {
-            
+            print("editButton")
         } label: {
-            Image(systemName: "line.3.horizontal")
+            Text("Edit Profile")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .frame(
+                    width: Constants.Button.width,
+                    height:  Constants.Button.height
+                )
                 .foregroundStyle(.black)
         }
     }
     
-    private var editButton: some View {
+    private var shareButton: some View {
         Button {
-            print("Ok")
+            print("shareButton")
         } label: {
-            Text("Edit Profile")
+            Text("Share Profile")
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .frame(
@@ -112,53 +102,48 @@ struct ProfileView: View {
         }
     }
     
-    private var profileImage: some View {
-        Image("Icon")
-            .resizable()
-            .scaledToFill()
-            .clipShape(Circle())
+    private var addButton: some View {
+        Button {
+            print("Add")
+        } label: {
+            Image(systemName: "person.badge.plus")
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(.black)
+                .padding(Constants.Button.addPadding)
+        }
     }
 }
+
+
 
 enum Stat: String, CaseIterable {
     case posts = "Posts"
     case followers = "Followers"
     case following = "Following"
 }
+
+
 private extension ProfileView {
     
     
     struct Constants {
         
         
-        static let lazyVspacing: CGFloat = 1
-        
-        static let nameVstackSpacing: CGFloat = 4
+        static let spacingV: CGFloat = 4
         
         static let spacing: CGFloat = 10
         
         struct Button {
+            static let addPadding: CGFloat = 6
             static let cornerRadius: CGFloat = 6
-            static let width: CGFloat = 370
+            static let width: CGFloat = 165
             static let height: CGFloat = 32
-            static let lineWidth: CGFloat = 1
-        }
-        
-        struct Icon {
-            static let width: CGFloat = 80
-            static let height: CGFloat = 80
-        }
-        
-        struct Stats {
-            static let padding: CGFloat = 12
-            static let hStackSpacing: CGFloat = 8
-            static let frameWidth: CGFloat = 80
-            static let anotherPadding: CGFloat = 4
-            
+            static let smallSize: CGFloat = 30
         }
     }
-    
 }
+
 
 #Preview {
     ProfileView()
