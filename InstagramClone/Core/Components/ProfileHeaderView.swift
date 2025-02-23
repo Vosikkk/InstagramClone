@@ -14,11 +14,27 @@ struct ProfileHeaderView: View {
     
     var body: some View {
         HStack {
-            Image(image)
-                .resizable()
-                .scaledToFill()
-                .clipShape(Circle())
-                .frame(width: imageWidth, height: imageHeight)
+            ZStack {
+                ProfileImageView(image: image)
+                    .frame(width: imageWidth, height: imageHeight)
+
+                Button {
+                    print("Add Story tapped")
+                } label: {
+                    ZStack {
+                        Circle()
+                            .fill(.white)
+                            .frame(width: 25, height: 25)
+                        
+                        Image(systemName: "plus")
+                            .foregroundStyle(.black)
+                            .font(.system(size: 18, weight: .bold))
+                    }
+                }
+                .offset(x: 30, y: 30)
+                .buttonStyle(.plain)
+            }
+            
             Spacer()
             HStack(spacing: spacing) {
                 ForEach(0..<Stat.allCases.count, id: \.self) { index in
@@ -37,5 +53,5 @@ struct ProfileHeaderView: View {
 }
 
 #Preview {
-    ProfileHeaderView(numbers: [1], image: "Icon")
+    ProfileHeaderView(numbers: [1, 2, 3], image: "Icon")
 }
