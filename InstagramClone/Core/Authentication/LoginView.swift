@@ -27,7 +27,7 @@ struct LoginView: View {
                 
                 /// text fields
                 VStack {
-                    setField {
+                    TextFieldWrapper {
                         TextField( "Enter your email", text: $email)
                             .textInputAutocapitalization(.none)
                         SecureField("Password", text: $password)
@@ -38,7 +38,7 @@ struct LoginView: View {
                     .frame(maxWidth: .infinity, alignment: .trailing)
                 
                 
-                loginButton
+                BlueButton(text: "Login", action: { print("Login was tapped")})
                     .padding(.vertical)
                 
                 HStack {
@@ -62,7 +62,8 @@ struct LoginView: View {
                 Divider()
                 
                 NavigationLink {
-                    Text("Sign up")
+                    AddEmailView()
+                        .navigationBarBackButtonHidden()
                 } label: {
                     HStack(spacing: Constants.linkSpacing) {
                         Text("Don't have an account?")
@@ -100,23 +101,6 @@ struct LoginView: View {
     }
     
     
-    private var loginButton: some View {
-        Button {
-            print("Login Tapped")
-        } label: {
-            Text("Login")
-                .font(.headline)
-                .fontWeight(.semibold)
-                .foregroundStyle(.white)
-                .frame(
-                    width: Constants.logButtonWidth,
-                    height: Constants.logButtonHeight
-                )
-                .background(Color(.systemBlue))
-                .cornerRadius(Constants.buttonCornerRadius)
-        }
-    }
-    
     private var forgotPasswordButton: some View {
         Button {
             print("Forgot Password Tapped")
@@ -149,22 +133,6 @@ struct LoginView: View {
     }
 }
 
-// MARK: - @ViewBuilder
-
-private extension LoginView {
-    
-    
-    func setField(@ViewBuilder content: () -> some View) -> some View {
-        content()
-            .font(.subheadline)
-            .padding(Constants.Field.padding)
-            .background(Color(.systemGray6))
-            .cornerRadius(Constants.Field.cornerRadius)
-            .padding(.horizontal, Constants.Field.horizontalPadding)
-    }
-}
-
-
 
 // MARK: - Constants
 
@@ -175,11 +143,6 @@ private extension LoginView {
         static let signUpPadding: CGFloat = 16
         static let linkSpacing: CGFloat = 3
         
-        struct Field {
-            static let cornerRadius: CGFloat = 10
-            static let padding: CGFloat = 12
-            static let horizontalPadding: CGFloat = 24
-        }
         
         static let continueHeight: CGFloat = 44
         
@@ -192,9 +155,7 @@ private extension LoginView {
         static let padding: CGFloat = 28
         static let lineHeight: CGFloat = 1
         
-        static let logButtonWidth: CGFloat = 355
-        static let logButtonHeight: CGFloat = 44
-        static let buttonCornerRadius: CGFloat = 8
+        
         
         static let horizontalTextPadding: CGFloat = 2
         
