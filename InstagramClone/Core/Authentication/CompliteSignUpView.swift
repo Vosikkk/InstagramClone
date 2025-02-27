@@ -1,49 +1,50 @@
 //
-//  AddEmailView.swift
+//  CompliteSignUpView.swift
 //  InstagramClone
 //
-//  Created by Саша Восколович on 24.02.2025.
+//  Created by Саша Восколович on 27.02.2025.
 //
 
 import SwiftUI
 
-struct AddEmailView: View {
+struct CompliteSignUpView: View {
     
-    @State private var email: String = ""
-    @Environment(\.dismiss) private var dismiss
+    @Environment(NavigationRouter.self) private var router
+    
+    let set: FeedSet
     
     var body: some View {
         
         VStack(spacing: vPadding) {
             
-            Text("Add your email")
+            Spacer()
+            
+            Text(set.title)
                 .font(.title2)
                 .fontWeight(.bold)
                 .padding(.top)
+                .multilineTextAlignment(.center)
             
-            Text("You'll use this email to sign in to your account")
+            Text(set.subtitle)
                 .font(.footnote)
-                .foregroundStyle(.gray)
+                
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, secondTextPadding)
             
-            TextFieldWrapper {
-                TextField("Email", text: $email)
+            BlueButton(text: set.placeholder) {
+                print("Complite sign up")
             }
-
-            
-            BlueButton(text: "Next", action: { print("Next was tapped")})
-                .padding(.vertical)
             
             Spacer()
             
         }
+        .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Image(systemName: "chevron.left")
                     .imageScale(.large)
                     .onTapGesture {
-                        dismiss()
+                        router.goBack()
                     }
             }
         }
@@ -52,7 +53,10 @@ struct AddEmailView: View {
     private let vPadding: CGFloat = 12
     private let secondTextPadding: CGFloat = 24
 }
+    
+
 
 #Preview {
-    AddEmailView()
+    CompliteSignUpView(set: FeedSet.signup)
+        .environment(NavigationRouter())
 }
