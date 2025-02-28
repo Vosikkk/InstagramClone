@@ -9,38 +9,49 @@ import SwiftUI
 
 struct SearchView: View {
     
+    @State private var router = SearchNavigationRouter()
+    
     @State private var searchText: String = ""
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $router.path) {
             ScrollView {
                 LazyVStack(spacing: Constants.lazyVSpacing) {
-                    ForEach(0...15, id: \.self) { user in
-                        HStack {
-                            ProfileImageView(image: "Icon")
-                                .frame(
-                                    width: Constants.Icon.width,
-                                    height: Constants.Icon.height
-                                )
-                            
-                            VStack(alignment: .leading) {
-                                Text("venom")
-                                    .fontWeight(.semibold)
+                    ForEach(User.MOCK_USERS) { user in
+                            HStack {
+                                ProfileImageView(image: user.profileImageURL ?? "")
+                                    .frame(
+                                        width: Constants.Icon.width,
+                                        height: Constants.Icon.height
+                                    )
                                 
-                                Text("Venom Venom")
+                                VStack(alignment: .leading) {
+                                    Text(user.username)
+                                        .fontWeight(.semibold)
+                                    
+                                    Text(user.fullname ?? "")
+                                }
+                                .font(.footnote)
+                                
+                                Spacer()
                             }
-                            .font(.footnote)
-                            
-                            Spacer()
+                            .contentShape(Rectangle())
+                            .padding(.horizontal)
+                            .onTapGesture {
+                                print("Tapped on user: \(user.username)")
+                                router.navigateTo(user)
+                                print("Current path: \(router.path)")
+                            }
                         }
-                        .padding(.horizontal)
-                    }
                 }
                 .padding(.top, Constants.lazyVPadding)
                 .searchable(text: $searchText)
             }
             .navigationTitle("Explore")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: User.self) { user in
+                router.buildView(for: user)
+            }
         }
     }
 }
@@ -56,9 +67,7 @@ private extension SearchView {
             static let width: CGFloat = 40
             static let height: CGFloat = 40
         }
-        
     }
-    
 }
 
 #Preview {

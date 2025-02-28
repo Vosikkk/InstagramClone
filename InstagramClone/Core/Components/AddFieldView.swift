@@ -33,7 +33,6 @@ struct AddFieldView: View {
             
             TextFieldWrapper {
                 fieldType.view(text: $input, placeholder: set.placeholder)
-                // TextField(set.placeholder, text: $input)
             }
             
             BlueButton(text: "Next", action: nextButtonAction)

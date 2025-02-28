@@ -9,8 +9,22 @@
 import SwiftUI
 import Observation
 
+protocol Router {
+    
+    associatedtype Destination: Hashable
+    associatedtype Screen: View
+    
+    var path: NavigationPath { get set }
+    
+    func navigateTo(_ destination: Destination?)
+    func goBack()
+    
+    @ViewBuilder
+    func buildView(for destination: Destination) -> Screen
+}
+
 @Observable
-final class NavigationRouter: ObservableObject {
+final class NavigationRouter: Router {
     
     var path = NavigationPath()
     
