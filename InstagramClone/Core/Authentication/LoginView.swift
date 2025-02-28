@@ -74,36 +74,11 @@ struct LoginView: View {
                 
             }   
             .navigationDestination(for: Destination.self) { destination in
-                let set = getFeedSet(for: destination)
-                
-                if destination != .signup {
-                    AddFieldView(set: set.0, fieldType: set.1!) {
-                        router.navigateTo(destination.next)
-                            
-                    }
-                   .environment(router)
-                } else {
-                    CompliteSignUpView(set: set.0)
-                    .environment(router)
-                }
-                
+                router.buildView(for: destination)
             }
         }
     }
     
-    
-    private func getFeedSet(for destination: Destination) -> (FeedSet, FieldType?) {
-        switch destination {
-        case .addEmail:
-            return (FeedSet.email, .text)
-        case .createUsername:
-            return (FeedSet.username, .text)
-        case .createPassword:
-            return (FeedSet.password, .secure)
-        case .signup:
-            return (FeedSet.signup, nil)
-        }
-    }
     
     // MARK: - View elements
     
@@ -162,11 +137,6 @@ struct LoginView: View {
 
 
 
-struct FeedSet {
-    let title: String
-    let subtitle: String
-    let placeholder: String
-}
 
 
 // MARK: - Constants
@@ -205,13 +175,3 @@ private extension LoginView {
     LoginView()
 }
 
-extension FeedSet {
-    
-    static let email: Self = FeedSet(title: "Add your email", subtitle: "You'll use this email to sign in to your account", placeholder: "Email")
-    
-    static let username: Self = FeedSet(title: "Add your username", subtitle: "This will be your username for signing in", placeholder: "Username")
-    
-    static let password: Self = FeedSet(title:  "Create a password", subtitle: "Your password must be at least 6 charcters in length", placeholder: "Password")
-    
-    static let signup: Self = FeedSet(title: "Welcome to Instagram, Sasha Voskolovych", subtitle: "Click bellow to complete registartion and start using Instagram", placeholder: "Complite sign up")
-}
