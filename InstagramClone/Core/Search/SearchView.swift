@@ -38,9 +38,7 @@ struct SearchView: View {
                             .contentShape(Rectangle())
                             .padding(.horizontal)
                             .onTapGesture {
-                                print("Tapped on user: \(user.username)")
                                 router.navigateTo(user)
-                                print("Current path: \(router.path)")
                             }
                         }
                 }
