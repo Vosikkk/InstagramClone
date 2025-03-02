@@ -9,27 +9,33 @@ import SwiftUI
 
 struct FeedCell: View {
     
+    let post: Post
     
+    init(for post: Post) {
+        self.post = post
+    }
     
     var body: some View {
         VStack {
             
             HStack {
-                ProfileImageView(image: "Icon")
-                    .frame(
-                        width: Constants.ImageSize.width,
-                        height: Constants.ImageSize.height
-                    )
-                
-                Text("Venom")
-                    .font(.footnote)
-                    .fontWeight(.semibold)
+                if let user = post.user {
+                    ProfileImageView(image: user.profileImageURL ?? "")
+                        .frame(
+                            width: Constants.ImageSize.width,
+                            height: Constants.ImageSize.height
+                        )
+                    
+                    Text(user.username)
+                        .font(.footnote)
+                        .fontWeight(.semibold)
+                }
                 
                 Spacer()
             }
             .padding(.leading, Constants.buttLeadPadding)
             
-            Image("Icon")
+            Image(post.imageUrl)
                 .resizable()
                 .scaledToFill()
                 .frame(height: 400)
@@ -58,7 +64,7 @@ struct FeedCell: View {
             .padding(.top, Constants.buttTopPadding)
             .foregroundStyle(.black)
             
-            Text("23 likes")
+            Text("\(post.likes) likes")
                 .font(.footnote)
                 .fontWeight(.semibold)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -66,8 +72,8 @@ struct FeedCell: View {
                 .padding(.top, Constants.topPadding)
             
             HStack {
-                Text("venom ").fontWeight(.semibold) +
-                Text("This is some test caption for now")
+                Text("\(post.user?.username ?? "") ").fontWeight(.semibold) +
+                Text(post.caption)
             }
             .font(.footnote)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -84,7 +90,10 @@ struct FeedCell: View {
         }
     }
     
-    private func makeButton(systemName: String, action: @escaping () -> Void) -> some View {
+    private func makeButton(
+        systemName: String,
+        action: @escaping () -> Void
+    ) -> some View {
         Button(action: action) {
             Image(systemName: systemName)
                 .imageScale(.large)
@@ -113,5 +122,5 @@ private extension FeedCell {
 }
 
 #Preview {
-    FeedCell()
+    FeedCell(for: Post.MOCK_POST[0])
 }

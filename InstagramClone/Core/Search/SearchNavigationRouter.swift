@@ -22,7 +22,7 @@ final class SearchNavigationRouter: Router {
     
     @ViewBuilder
     func buildView(for destination: User) -> some View {
-        ProfileView()
+        ProfileView(of: destination)
             .environment(self)
     }
     

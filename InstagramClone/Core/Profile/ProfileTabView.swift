@@ -10,6 +10,9 @@ import SwiftUI
 struct ProfileTabView: View {
     
     @Binding var selectedTab: Int
+    
+    var posts: [Post]
+    
     private let gridItems = Array(repeating: GridItem(.flexible(), spacing: 1), count: 3)
     
     var body: some View {
@@ -28,10 +31,12 @@ struct ProfileTabView: View {
             switch selectedTab {
             case 0:
                 LazyVGrid(columns: gridItems, spacing: spacing) {
-                    ForEach(0...15, id: \.self) { _ in
-                        Image("david-beckham2")
+                    ForEach(posts) { post in
+                        Image(post.imageUrl)
                             .resizable()
                             .scaledToFill()
+                            .frame(width: imageDimension - spacing, height: imageDimension - spacing)
+                            .clipped()
                     }
                 }
             default:
@@ -41,8 +46,10 @@ struct ProfileTabView: View {
     }
     
     private let spacing: CGFloat = 1
+    
+    private let imageDimension: CGFloat = (UIScreen.main.bounds.width / 3)
 }
 
 #Preview {
-    ProfileTabView(selectedTab: .constant(0))
+    ProfileTabView(selectedTab: .constant(0), posts: Post.MOCK_POST)
 }

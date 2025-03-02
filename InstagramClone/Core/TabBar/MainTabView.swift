@@ -33,7 +33,7 @@ struct MainTabView: View {
                 
             }
             Tab("", systemImage: "person", value: .profile) {
-                CurrentUserProfileView()
+                CurrentProfileView(of: User.MOCK_USERS[1])
             }
         }
         .accentColor(.black)

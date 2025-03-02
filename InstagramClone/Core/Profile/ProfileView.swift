@@ -11,6 +11,17 @@ struct ProfileView: View {
     
     @Environment(SearchNavigationRouter.self) private var router
     
+    let user: User
+    
+    init(of user: User) {
+        self.user = user
+    }
+    
+    
+    var posts: [Post] {
+        Post.MOCK_POST.filter { $0.user == user }
+    }
+    
     let numbers: [Int] = [123, 23, 15]
     
     private let gridItems: [GridItem] = [
@@ -25,39 +36,9 @@ struct ProfileView: View {
             
             ScrollView {
                 
-                VStack(spacing: Constants.spacing) {
-                    
-                    HStack {
-                        ProfileHeaderView<AddStoryButton>(numbers: numbers, image: "Icon", addStoryButton: nil)
-                        
-                    }
-                    
-                    VStack(alignment: .leading,
-                           spacing: Constants.spacingV) {
-                        
-                        Text("Sasha Voskolovych")
-                            .fontWeight(.semibold)
-                        
-                        Text("Liberty")
-                    }
-                           .font(.footnote)
-                           .frame(maxWidth: .infinity, alignment: .leading)
-                           .padding(.horizontal)
-                    
-                    HStack {
-                        RoundedButton(action: {}, text: "Following")
-                            .borderedShape(RoundedRectangle(cornerRadius:  Constants.Button.cornerRadius))
-                        
-                        RoundedButton(action: {}, text: "Message")
-                            .borderedShape(RoundedRectangle(cornerRadius:  Constants.Button.cornerRadius))
-                        
-                        AddButton(action: { print("Add") })
-                            .frame(width: Constants.Button.smallSize, height: Constants.Button.height)
-                            .borderedShape(RoundedRectangle(cornerRadius:  Constants.Button.cornerRadius))
-                    }
-                }
+                ProfileHeadView(of: user, addStoryButton: false)
                 
-                ProfileTabView(selectedTab: $selectedTab)
+                ProfileTabView(selectedTab: $selectedTab, posts: posts)
             }
             .navigationBarBackButtonHidden()
             .navigationTitle("Profile")
@@ -112,6 +93,6 @@ private extension ProfileView {
 
 
 #Preview {
-    ProfileView()
+    ProfileView(of: User.MOCK_USERS[0])
         .environment(SearchNavigationRouter())
 }

@@ -10,14 +10,21 @@ import SwiftUI
 struct ProfileHeaderView<Button: View>: View {
     
     let numbers: [Int]
-    let image: String
+    let image: String?
     let addStoryButton: (() -> Button)?
     
     var body: some View {
         HStack {
             ZStack {
-                ProfileImageView(image: image)
-                    .frame(width: imageWidth, height: imageHeight)
+                Group {
+                    if let image {
+                        ProfileImageView(image: image)
+                           
+                    } else {
+                        Color.clear
+                    }
+                }
+                .frame(width: imageWidth, height: imageHeight)
                 
                 if let button = addStoryButton {
                     button()
@@ -35,6 +42,7 @@ struct ProfileHeaderView<Button: View>: View {
         .padding(.horizontal, padd)
     }
     
+    
     private let x: CGFloat = 30
     private let y: CGFloat = 30
     
@@ -45,5 +53,5 @@ struct ProfileHeaderView<Button: View>: View {
 }
 
 #Preview {
-    ProfileHeaderView<AddStoryButton>(numbers: [1, 2, 3], image: "Icon", addStoryButton: { AddStoryButton(action: { print("Add strory tapped")})})
+    ProfileHeaderView<AddStoryButton>(numbers: [1, 2, 3], image: nil, addStoryButton: { AddStoryButton(action: { print("Add strory tapped")})})
 }

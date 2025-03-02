@@ -18,7 +18,3 @@ struct ProfileImageView: View {
             .clipShape(Circle())
     }
 }
-
-#Preview {
-    ProfileImageView(image: "Icon")
-}
