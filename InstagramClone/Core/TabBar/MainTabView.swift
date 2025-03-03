@@ -18,8 +18,7 @@ struct MainTabView: View {
     var body: some View {
         
         TabView(selection: $selectedTab) {
-            
-            
+            z
             Tab("", systemImage: "house", value: .feed) {
                 FeedView()
             }
@@ -27,7 +26,7 @@ struct MainTabView: View {
                 SearchView()
             }
             Tab("", systemImage: "plus.square", value: .uploadPosts) {
-                
+                UploadPostView(tab: $selectedTab)
             }
             Tab("", systemImage: "heart", value: .notifications) {
                 

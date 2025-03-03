@@ -30,6 +30,7 @@ struct ProfileHeadView: View {
                         AddStoryButton(action: { print("Add strory tapped")})
                     } : nil
                 )
+                // TODO: Need some changes for this addStoryButton
             }
             
             VStack(alignment: .leading,
