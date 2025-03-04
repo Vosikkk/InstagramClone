@@ -9,14 +9,15 @@ import SwiftUI
 
 struct AddFieldView: View {
     
-    @State private var input: String = ""
     @Environment(NavigationRouter.self) private var router
+    @Environment(RegistrationViewModel.self) private var registerVM
     
     let set: FeedSet
     let fieldType: FieldType
     let nextButtonAction: () -> Void
     
     var body: some View {
+       
         
         VStack(spacing: vPadding) {
             
@@ -32,9 +33,8 @@ struct AddFieldView: View {
                 .padding(.horizontal, secondTextPadding)
             
             TextFieldWrapper {
-                fieldType.view(text: $input, placeholder: set.placeholder)
+                fieldType.view(text: textBinding(for: set), placeholder: set.placeholder)
             }
-            
             BlueButton(text: "Next", action: nextButtonAction)
                 .padding(.vertical)
             
@@ -50,6 +50,22 @@ struct AddFieldView: View {
                         router.goBack()
                     }
             }
+        }
+    }
+    
+    
+    private func textBinding(for set: FeedSet) -> Binding<String> {
+        @Bindable var registerVM = registerVM
+        
+        switch set {
+        case .email:
+            return $registerVM.email
+        case .username:
+            return $registerVM.username
+        case .password:
+            return $registerVM.password
+        default:
+            return .constant("")
         }
     }
     
@@ -75,4 +91,5 @@ enum FieldType {
 #Preview {
     AddFieldView(set: FeedSet.email, fieldType: .secure, nextButtonAction: { })
     .environment(NavigationRouter())
+    .environment(RegistrationViewModel(authService: AuthService()))
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FeedSet {
+struct FeedSet: Equatable {
     let title: String
     let subtitle: String
     let placeholder: String

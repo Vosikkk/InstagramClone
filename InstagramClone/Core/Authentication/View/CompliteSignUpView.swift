@@ -10,6 +10,7 @@ import SwiftUI
 struct CompliteSignUpView: View {
     
     @Environment(NavigationRouter.self) private var router
+    @Environment(RegistrationViewModel.self) private var registerVM
     
     let set: FeedSet
     
@@ -32,7 +33,9 @@ struct CompliteSignUpView: View {
                 .padding(.horizontal, secondTextPadding)
             
             BlueButton(text: set.placeholder) {
-                print("Complite sign up")
+                Task {
+                    try? await registerVM.createUser()
+                }
             }
             
             Spacer()
@@ -59,4 +62,5 @@ struct CompliteSignUpView: View {
 #Preview {
     CompliteSignUpView(set: FeedSet.signup)
         .environment(NavigationRouter())
+        .environment(RegistrationViewModel(authService: AuthService()))
 }

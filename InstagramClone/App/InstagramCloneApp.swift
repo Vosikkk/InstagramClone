@@ -22,10 +22,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct InstagramCloneApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+   
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(service: AuthService())
         }
     }
 }

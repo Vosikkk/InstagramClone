@@ -28,6 +28,7 @@ final class NavigationRouter: Router {
     
     var path = NavigationPath()
     
+    
     func navigateTo(_ destination: Destination?) {
         if let destination {
             path.append(destination)
@@ -48,6 +49,7 @@ final class NavigationRouter: Router {
                 self.navigateTo(destination.next)
             }
             .environment(self)
+
         } else {
             CompliteSignUpView(set: set.0)
             .environment(self)

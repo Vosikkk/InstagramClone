@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct LoginView: View {
+   
     @State private var router = NavigationRouter()
     
     @State private var email: String = ""
     @State private var password: String = ""
-    
+    @Environment(RegistrationViewModel.self) private var registerVM
     
     var body: some View {
         
@@ -75,6 +76,7 @@ struct LoginView: View {
             }   
             .navigationDestination(for: Destination.self) { destination in
                 router.buildView(for: destination)
+//                    .environment(registerVM)
             }
         }
     }
@@ -173,5 +175,6 @@ private extension LoginView {
 
 #Preview {
     LoginView()
+        .environment(RegistrationViewModel(authService: AuthService()))
 }
 
