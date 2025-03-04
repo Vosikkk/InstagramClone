@@ -18,7 +18,6 @@ struct MainTabView: View {
     var body: some View {
         
         TabView(selection: $selectedTab) {
-            z
             Tab("", systemImage: "house", value: .feed) {
                 FeedView()
             }

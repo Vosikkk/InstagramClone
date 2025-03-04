@@ -84,6 +84,7 @@ struct UploadPostView: View {
     
     private let imageWidth: CGFloat = 100
     private let imageHeight: CGFloat = 100
+
 }
 
 #Preview {
