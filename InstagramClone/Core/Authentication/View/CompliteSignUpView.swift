@@ -9,10 +9,7 @@ import SwiftUI
 
 struct CompliteSignUpView: View {
     
-    @Environment(NavigationRouter.self) private var router
-    @Environment(RegistrationViewModel.self) private var registerVM
-    
-    let set: FeedSet
+    let configuration: RegisterConfiguration
     
     var body: some View {
         
@@ -20,36 +17,24 @@ struct CompliteSignUpView: View {
             
             Spacer()
             
-            Text(set.title)
+            Text(configuration.title)
                 .font(.title2)
                 .fontWeight(.bold)
                 .padding(.top)
                 .multilineTextAlignment(.center)
             
-            Text(set.subtitle)
+            Text(configuration.subtitle)
                 .font(.footnote)
                 
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, secondTextPadding)
             
-            BlueButton(text: set.placeholder) {
-                Task {
-                    try? await registerVM.createUser()
-                }
+            if let action = configuration.action {
+                BlueButton(text: configuration.placeholder, action: action) 
             }
             
             Spacer()
             
-        }
-        .navigationBarBackButtonHidden()
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Image(systemName: "chevron.left")
-                    .imageScale(.large)
-                    .onTapGesture {
-                        router.goBack()
-                    }
-            }
         }
     }
     
@@ -60,7 +45,5 @@ struct CompliteSignUpView: View {
 
 
 #Preview {
-    CompliteSignUpView(set: FeedSet.signup)
-        .environment(NavigationRouter())
-        .environment(RegistrationViewModel(authService: AuthService()))
+    CompliteSignUpView(configuration: RegisterConfiguration(placeholder: "Sign Up"))
 }

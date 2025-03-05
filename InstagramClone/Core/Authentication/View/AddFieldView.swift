@@ -8,66 +8,46 @@
 import SwiftUI
 
 struct AddFieldView: View {
+
     
-    @Environment(NavigationRouter.self) private var router
-    @Environment(RegistrationViewModel.self) private var registerVM
+    @Binding var text: String
+    let configuration: RegisterConfiguration
     
-    let set: FeedSet
-    let fieldType: FieldType
-    let nextButtonAction: () -> Void
-    
+   
     var body: some View {
        
         
         VStack(spacing: vPadding) {
-            
-            Text(set.title)
-                .font(.title2)
-                .fontWeight(.bold)
-                .padding(.top)
-            
-            Text(set.subtitle)
-                .font(.footnote)
-                .foregroundStyle(.gray)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, secondTextPadding)
-            
-            TextFieldWrapper {
-                fieldType.view(text: textBinding(for: set), placeholder: set.placeholder)
+            if !configuration.title.isEmpty {
+                Text(configuration.title)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .padding(.top)
             }
-            BlueButton(text: "Next", action: nextButtonAction)
-                .padding(.vertical)
             
+            if !configuration.subtitle.isEmpty {
+                
+                Text(configuration.subtitle)
+                    .font(.footnote)
+                    .foregroundStyle(.gray)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, secondTextPadding)
+            }
+            
+            if let fieldType = configuration.fieldType {
+                
+                TextFieldWrapper {
+                    fieldType.view(text: $text, placeholder: configuration.placeholder)
+                }
+            }
+            if let action = configuration.action {
+                BlueButton(text: "Next", action: action)
+                    .padding(.vertical)
+            }
             Spacer()
-            
-        }
-        .navigationBarBackButtonHidden()
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Image(systemName: "chevron.left")
-                    .imageScale(.large)
-                    .onTapGesture {
-                        router.goBack()
-                    }
-            }
         }
     }
     
-    
-    private func textBinding(for set: FeedSet) -> Binding<String> {
-        @Bindable var registerVM = registerVM
-        
-        switch set {
-        case .email:
-            return $registerVM.email
-        case .username:
-            return $registerVM.username
-        case .password:
-            return $registerVM.password
-        default:
-            return .constant("")
-        }
-    }
     
     private let vPadding: CGFloat = 12
     private let secondTextPadding: CGFloat = 24
@@ -89,7 +69,6 @@ enum FieldType {
 }
 
 #Preview {
-    AddFieldView(set: FeedSet.email, fieldType: .secure, nextButtonAction: { })
-    .environment(NavigationRouter())
-    .environment(RegistrationViewModel(authService: AuthService()))
+    AddFieldView(text: .constant(""), configuration: RegisterConfiguration(placeholder: ""))
+    
 }

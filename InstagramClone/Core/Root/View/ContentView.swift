@@ -10,19 +10,19 @@ import SwiftUI
 struct ContentView: View {
     let service: AuthService
     @StateObject var contentViewModel: ContentViewModel
-    @State private var registerVM: RegistrationViewModel
+    @State private var router: NavigationRouter
     
     init(service: AuthService) {
         self.service = service
         _contentViewModel = StateObject(wrappedValue: ContentViewModel(service: service))
-        registerVM = RegistrationViewModel(authService: service)
+        router = NavigationRouter(registerVM: RegistrationViewModel(authService: service))
     }
  
     var body: some View {
         Group {
             if contentViewModel.userSession == nil {
                 LoginView()
-                    .environment(registerVM)
+                    .environment(router)
             } else {
                 MainTabView()
             }
