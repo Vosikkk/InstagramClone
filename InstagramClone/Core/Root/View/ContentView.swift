@@ -8,23 +8,34 @@
 import SwiftUI
 
 struct ContentView: View {
+    
     let service: AuthService
-    @StateObject var contentViewModel: ContentViewModel
-    @State private var router: NavigationRouter
+    @StateObject var authViewModel: AuthViewModel
+    @State private var router: RegistrationRouter
+    @State private var loginViewModel: LoginViewModel
+    
     
     init(service: AuthService) {
         self.service = service
-        _contentViewModel = StateObject(wrappedValue: ContentViewModel(service: service))
-        router = NavigationRouter(registerVM: RegistrationViewModel(authService: service))
+        _authViewModel = StateObject(wrappedValue: AuthViewModel(service: service))
+        _loginViewModel = State(wrappedValue: LoginViewModel(service: service))
+        router = RegistrationRouter(registerVM: RegistrationViewModel(service: service))
     }
  
     var body: some View {
         Group {
-            if contentViewModel.userSession == nil {
-                LoginView()
-                    .environment(router)
+            if authViewModel.userSession == nil {
+                NavigationStack(path: $router.path) {
+                    LoginView()
+                        .environment(router)
+                        .environment(loginViewModel)
+                        .navigationDestination(for: Destination.self) { destination in
+                            router.buildView(for: destination)
+                        }
+                }
             } else {
                 MainTabView()
+                    .environmentObject(authViewModel)
             }
         }
     }

@@ -39,6 +39,7 @@ struct AddFieldView: View {
                 TextFieldWrapper {
                     fieldType.view(text: $text, placeholder: configuration.placeholder)
                 }
+                .autocapitalization(.none)
             }
             if let action = configuration.action {
                 BlueButton(text: "Next", action: action)

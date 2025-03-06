@@ -24,13 +24,12 @@ protocol Router {
 }
 
 @Observable
-final class NavigationRouter: Router {
+final class RegistrationRouter: Router {
     
     var path: NavigationPath
     
-    
+
     private let registerVM: RegistrationViewModel
-    
     
     init(path: NavigationPath = NavigationPath(), registerVM: RegistrationViewModel) {
         self.path = path
@@ -49,6 +48,9 @@ final class NavigationRouter: Router {
         path.removeLast()
     }
     
+    private func reset() {
+        path = NavigationPath()
+    }
     
     func buildView(for destination: Destination) -> some View {
         let set = getFeedSet(for: destination)
@@ -60,8 +62,7 @@ final class NavigationRouter: Router {
                                 fieldType: set.1!,
                                 placeholder: set.0.placeholder,
                                 title: set.0.title,
-                                subtitle: set.0.subtitle
-                                ,
+                                subtitle: set.0.subtitle,
                                 action: { self.navigateTo(destination.next) }
                              )
                 )
@@ -69,9 +70,12 @@ final class NavigationRouter: Router {
                 CompliteSignUpView(
                     configuration: RegisterConfiguration(
                         placeholder: set.0.placeholder,
-                        title: set.0.title,
+                        title: "\(set.0.title) " + registerVM.username,
                         subtitle: set.0.subtitle,
-                        action: { Task { try? await self.registerVM.createUser() } }
+                        action: {
+                            Task { try? await self.registerVM.createUser()
+                                self.reset() }
+                        }
                     )
                 )
             }

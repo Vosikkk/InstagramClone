@@ -8,7 +8,8 @@
 import FirebaseAuth
 import Combine
 
-final class ContentViewModel: ObservableObject {
+
+final class AuthViewModel: ObservableObject {
     
     @Published var userSession: FirebaseAuth.User?
     private var cancellables = Set<AnyCancellable>()
@@ -27,5 +28,9 @@ final class ContentViewModel: ObservableObject {
             self?.userSession = $0
         }
         .store(in: &cancellables)
+    }
+    
+    func signOut() {
+        service.signout()
     }
 }

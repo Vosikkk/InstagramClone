@@ -9,14 +9,14 @@ import SwiftUI
 
 struct LoginView: View {
    
-    @State private var email: String = ""
-    @State private var password: String = ""
-    @Environment(NavigationRouter.self) private var router
+    @Environment(RegistrationRouter.self) private var router
+    @Environment(LoginViewModel.self) private var loginVM
+    
     
     var body: some View {
-        @Bindable var router = router
+
+        @Bindable var vm = loginVM
         
-        NavigationStack(path: $router.path) {
             
             VStack {
                 
@@ -28,9 +28,9 @@ struct LoginView: View {
                 /// text fields
                 VStack {
                     TextFieldWrapper {
-                        TextField( "Enter your email", text: $email)
+                        TextField( "Enter your email", text: $vm.email)
                             .textInputAutocapitalization(.none)
-                        SecureField("Password", text: $password)
+                        SecureField("Password", text: $vm.password)
                     }
                 }
                 
@@ -38,7 +38,11 @@ struct LoginView: View {
                     .frame(maxWidth: .infinity, alignment: .trailing)
                 
                 
-                BlueButton(text: "Login", action: { print("Login was tapped")})
+                BlueButton(text: "Login", action: {
+                    Task {
+                        try await loginVM.signIn()
+                    }
+                })
                     .padding(.vertical)
                 
                 HStack {
@@ -71,11 +75,6 @@ struct LoginView: View {
                     .font(.footnote)
                 }
                 .padding(.vertical, Constants.signUpPadding)
-                
-            }   
-            .navigationDestination(for: Destination.self) { destination in
-                router.buildView(for: destination)
-            }
         }
     }
     
@@ -173,6 +172,12 @@ private extension LoginView {
 
 #Preview {
     LoginView()
-        .environment(NavigationRouter(registerVM: RegistrationViewModel(authService: AuthService())))
+        .environment(
+            RegistrationRouter(
+                registerVM: RegistrationViewModel(
+                    service: AuthService()
+                )
+            )
+        )
 }
 

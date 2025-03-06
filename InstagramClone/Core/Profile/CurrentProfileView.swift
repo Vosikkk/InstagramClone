@@ -11,6 +11,8 @@ struct CurrentProfileView: View {
     
     @State private var selectedTab: Int = 0
     
+    @EnvironmentObject var authViewModel: AuthViewModel
+    
     let numbers: [Int] = [123, 23, 15]
     
     let user: User
@@ -40,7 +42,7 @@ struct CurrentProfileView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack(spacing: spacing) {
                         ToolbarButton(icon: "plus.app", action: { print("Add content tapped") })
-                        ToolbarButton(icon: "line.3.horizontal") { print("Settings tapped") }
+                        ToolbarButton(icon: "line.3.horizontal") { authViewModel.signOut() }
                     }
                 }
             }

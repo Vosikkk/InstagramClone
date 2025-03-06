@@ -21,5 +21,5 @@ extension FeedSet {
     
     static let password: Self = FeedSet(title:  "Create a password", subtitle: "Your password must be at least 6 charcters in length", placeholder: "Password")
     
-    static let signup: Self = FeedSet(title: "Welcome to Instagram, Sasha Voskolovych", subtitle: "Click bellow to complete registartion and start using Instagram", placeholder: "Complite sign up")
+    static let signup: Self = FeedSet(title: "Welcome to Instagram,", subtitle: "Click bellow to complete registartion and start using Instagram", placeholder: "Complite sign up")
 }

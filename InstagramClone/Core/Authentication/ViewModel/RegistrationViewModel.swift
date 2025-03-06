@@ -5,24 +5,31 @@
 //  Created by Саша Восколович on 04.03.2025.
 //
 
-import Observation
 
+import Observation
 
 @Observable
 final class RegistrationViewModel {
     
-    var username: String = ""
-    var password: String = ""
-    var email: String = ""
+     var email: String = ""
+     var username: String = ""
+     var password: String = ""
     
-    private let authService: AuthService
+    private let service: AuthService
     
-    init(authService: AuthService) {
-        self.authService = authService
+    init(service: AuthService) {
+        self.service = service
     }
     
     func createUser() async throws {
-        try await authService.createUser(email: email, password: password, username: username)
+        try await service.createUser(email: email, username: username, password: password)
+        resetFields()
     }
+    
+    func resetFields() {
+            self.email = ""
+            self.username = ""
+            self.password = ""
+        }
     
 }
