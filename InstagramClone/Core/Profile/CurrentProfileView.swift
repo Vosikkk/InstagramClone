@@ -15,23 +15,19 @@ struct CurrentProfileView: View {
     
     let numbers: [Int] = [123, 23, 15]
     
-    let user: User
-    
-    init(of user: User) {
-        self.user = user
-    }
     
     
     var posts: [Post] {
-        Post.MOCK_POST.filter { $0.user == user }
+        Post.MOCK_POST.filter { $0.user == authViewModel.user }
     }
     
     var body: some View {
         NavigationStack {
             
             ScrollView {
-                
-                ProfileHeadView(of: user, addStoryButton: true)
+                if let user = authViewModel.user {
+                    ProfileHeadView(of: user, addStoryButton: true)
+                }
                 
                 ProfileTabView(selectedTab: $selectedTab, posts: posts)
             }
@@ -56,5 +52,5 @@ struct CurrentProfileView: View {
 }
 
 #Preview {
-    CurrentProfileView(of: User.MOCK_USERS[0])
+    CurrentProfileView()
 }

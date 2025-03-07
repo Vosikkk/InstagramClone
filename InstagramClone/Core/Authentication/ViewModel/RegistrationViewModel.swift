@@ -15,21 +15,23 @@ final class RegistrationViewModel {
      var username: String = ""
      var password: String = ""
     
-    private let service: AuthService
+    private let service: FirebaseAuthService
     
-    init(service: AuthService) {
+    init(service: FirebaseAuthService) {
         self.service = service
     }
     
     func createUser() async throws {
-        try await service.createUser(email: email, username: username, password: password)
-        resetFields()
+        try await service.createUser(
+            email: email,
+            username: username,
+            password: password
+        )
     }
     
     func resetFields() {
-            self.email = ""
-            self.username = ""
-            self.password = ""
-        }
-    
+        self.email = ""
+        self.username = ""
+        self.password = ""
+    }   
 }

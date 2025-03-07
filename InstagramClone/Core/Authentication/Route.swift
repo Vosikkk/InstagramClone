@@ -73,8 +73,11 @@ final class RegistrationRouter: Router {
                         title: "\(set.0.title) " + registerVM.username,
                         subtitle: set.0.subtitle,
                         action: {
-                            Task { try? await self.registerVM.createUser()
-                                self.reset() }
+                            Task {
+                                try? await self.registerVM.createUser()
+                                self.reset()
+                                self.registerVM.resetFields()
+                            }
                         }
                     )
                 )

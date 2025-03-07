@@ -15,10 +15,10 @@ final class LoginViewModel {
     var password: String = ""
     
     
-    private let service: AuthService
+    private let service: FirebaseAuthService
     
     
-    init(service: AuthService) {
+    init(service: FirebaseAuthService) {
         self.service = service
     }
     

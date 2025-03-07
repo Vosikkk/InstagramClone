@@ -41,7 +41,7 @@ struct ProfileHeadView: View {
                         .fontWeight(.semibold)
                 }
                 
-                Text(user.bio ?? "")
+                Text(user.bio ?? user.username)
             }
                    .font(.footnote)
                    .frame(maxWidth: .infinity, alignment: .leading)

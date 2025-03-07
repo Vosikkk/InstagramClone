@@ -175,7 +175,7 @@ private extension LoginView {
         .environment(
             RegistrationRouter(
                 registerVM: RegistrationViewModel(
-                    service: AuthService()
+                    service: FirebaseAuthService()
                 )
             )
         )

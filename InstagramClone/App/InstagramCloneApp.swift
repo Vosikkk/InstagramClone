@@ -26,7 +26,7 @@ struct InstagramCloneApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(service: AuthService())
+            ContentView(service: FirebaseAuthService())
         }
     }
 }

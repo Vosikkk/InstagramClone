@@ -9,13 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     
-    let service: AuthService
+    let service: FirebaseAuthService
     @StateObject var authViewModel: AuthViewModel
     @State private var router: RegistrationRouter
     @State private var loginViewModel: LoginViewModel
     
     
-    init(service: AuthService) {
+    init(service: FirebaseAuthService) {
         self.service = service
         _authViewModel = StateObject(wrappedValue: AuthViewModel(service: service))
         _loginViewModel = State(wrappedValue: LoginViewModel(service: service))
@@ -33,7 +33,7 @@ struct ContentView: View {
                             router.buildView(for: destination)
                         }
                 }
-            } else {
+            } else  {
                 MainTabView()
                     .environmentObject(authViewModel)
             }
@@ -42,5 +42,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(service: AuthService())
+    ContentView(service: FirebaseAuthService())
 }
