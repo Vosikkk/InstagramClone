@@ -11,6 +11,7 @@ struct ProfileHeadView: View {
     
     let user: User
     let addStoryButton: Bool
+    @State private var showEditProfile: Bool = false
     
     
     init(of user: User, addStoryButton: Bool) {
@@ -52,7 +53,7 @@ struct ProfileHeadView: View {
                 RoundedButton(
                     action: {
                         if user.isCurrent {
-                            print("Show edit profile")
+                            showEditProfile.toggle()
                         } else {
                             print("Follow")
                         }
@@ -69,6 +70,9 @@ struct ProfileHeadView: View {
                     .frame(width: Constants.Button.smallSize, height: Constants.Button.height)
                     .borderedShape(RoundedRectangle(cornerRadius:  Constants.Button.cornerRadius))
             }
+        }
+        .fullScreenCover(isPresented: $showEditProfile) {
+            Text("Edit Profile")
         }
     }
     
