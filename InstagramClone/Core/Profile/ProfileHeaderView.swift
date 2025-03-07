@@ -18,7 +18,8 @@ struct ProfileHeaderView<Button: View>: View {
             ZStack {
                 Group {
                     if let image {
-                        ProfileImageView(image: image)
+                        Image(image)
+                            .profileStyle()
                            
                     } else {
                         Color.clear

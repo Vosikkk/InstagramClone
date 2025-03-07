@@ -11,6 +11,7 @@ struct RoundedButton: View {
     
     let action: () -> Void
     let text: String
+    var color: Color = .black
     
     var body: some View {
         Button(action: action) {
@@ -21,7 +22,7 @@ struct RoundedButton: View {
                     width: width,
                     height: height
                 )
-                .foregroundStyle(.black)
+                .foregroundStyle(color)
         }
     }
     

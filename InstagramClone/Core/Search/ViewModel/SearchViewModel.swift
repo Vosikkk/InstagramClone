@@ -10,18 +10,13 @@ import Observation
 @Observable
 final class SearchViewModel {
     
-    
     var users: [User] = []
     
     init() {
-        Task {
-            try? await fetchAllUsers()
-        }
+        Task { try? await fetchAllUsers() }
     }
     
     func fetchAllUsers() async throws {
-        // TODO: finish that
-        let users = try? await UserService().fetchAllUsers()
-        self.users = users!
+        users = try await UserService.fetchAllUsers()
     }
 }

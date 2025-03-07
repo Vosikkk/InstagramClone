@@ -12,6 +12,7 @@ struct ProfileHeadView: View {
     let user: User
     let addStoryButton: Bool
     
+    
     init(of user: User, addStoryButton: Bool) {
         self.user = user
         self.addStoryButton = addStoryButton
@@ -48,8 +49,18 @@ struct ProfileHeadView: View {
                    .padding(.horizontal)
             
             HStack {
-                RoundedButton(action: { print("Add") }, text: "Edit Profile")
-                    .borderedShape(RoundedRectangle(cornerRadius:  Constants.Button.cornerRadius))
+                RoundedButton(
+                    action: {
+                        if user.isCurrent {
+                            print("Show edit profile")
+                        } else {
+                            print("Follow")
+                        }
+                    }, text: user.isCurrent ? "Edit Profile" : "Follow", color: user.isCurrent ? .black : .white)
+                .background(user.isCurrent ? .white : Color(.systemBlue))
+                .borderedShape(RoundedRectangle(cornerRadius:  Constants.Button.cornerRadius), color: user.isCurrent ? .gray : .clear)
+                    
+                   
                 
                 RoundedButton(action: {print("Share") } , text: "Share Profile")
                     .borderedShape(RoundedRectangle(cornerRadius:  Constants.Button.cornerRadius))

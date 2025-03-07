@@ -9,15 +9,10 @@ import Foundation
 import Firebase
 
 struct UserService {
-    
-    
-    func fetchAllUsers() async throws -> [User] {
-        var users: [User] = []
+
+    static func fetchAllUsers() async throws -> [User] {
         let documents = try await Firestore.firestore().collection("users").getDocuments().documents
         
-        documents.forEach { print($0.data()) }
-        
-        return users
+        return documents.compactMap { try? $0.data(as: User.self) }
     }
-    
 }

@@ -15,6 +15,7 @@ struct BorderedShapeModifier<S: Shape>: ViewModifier {
     
     func body(content: Content) -> some View {
         content
+            .clipShape(shape)
             .overlay {
                 shape
                     .stroke(color, lineWidth: lineWidth)

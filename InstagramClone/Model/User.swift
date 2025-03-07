@@ -5,7 +5,7 @@
 //  Created by Саша Восколович on 28.02.2025.
 //
 
-import Foundation
+import FirebaseAuth
 
 struct User: Identifiable, Codable, Hashable {
     
@@ -15,6 +15,11 @@ struct User: Identifiable, Codable, Hashable {
     var fullname: String?
     var bio: String?
     let email: String
+    
+    var isCurrent: Bool {
+        guard let uid = Auth.auth().currentUser?.uid else { return false }
+        return uid == id
+    }
     
 }
 

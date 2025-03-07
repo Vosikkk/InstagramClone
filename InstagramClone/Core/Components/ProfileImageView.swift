@@ -7,12 +7,10 @@
 
 import SwiftUI
 
-struct ProfileImageView: View {
-    
-    let image: String
-    
-    var body: some View {
-        Image(image)
+
+extension Image {
+    func profileStyle() -> some View {
+        self
             .resizable()
             .scaledToFill()
             .clipShape(Circle())

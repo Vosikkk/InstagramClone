@@ -20,7 +20,8 @@ struct FeedCell: View {
             
             HStack {
                 if let user = post.user {
-                    ProfileImageView(image: user.profileImageURL ?? "")
+                    Image(user.profileImageURL ?? "")
+                        .profileStyle()
                         .frame(
                             width: Constants.ImageSize.width,
                             height: Constants.ImageSize.height
