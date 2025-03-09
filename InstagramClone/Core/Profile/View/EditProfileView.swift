@@ -12,7 +12,12 @@ struct EditProfileView: View {
     
     @Environment(\.dismiss) private var dismiss
     
-    @State private var photoPickerVM: EditPhotoPickerViewModel = .init()
+    @State private var photoPickerVM: EditPhotoPickerViewModel
+    
+    init(of user: User) {
+        photoPickerVM = .init(user: user)
+    }
+    
     
     var body: some View {
         
@@ -59,7 +64,9 @@ struct EditProfileView: View {
     
     private var updateProfileButton: some View {
         Button {
-            print("Update profile")
+            Task {
+                try await photoPickerVM.updateUserData()
+            }
         } label: {
             Text("Done")
                 .font(.subheadline)
@@ -131,5 +138,8 @@ struct EditProfileRowView: View {
 
 
 #Preview {
-    EditProfileView()
+    EditProfileView(of: User.MOCK_USERS[0])
 }
+
+
+
