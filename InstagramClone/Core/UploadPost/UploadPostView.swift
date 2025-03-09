@@ -12,7 +12,7 @@ struct UploadPostView: View {
     
     @State private var caption: String = ""
     @State private var imagePickerPresented: Bool = false
-    @State private var vm: UploadPostViewModel = .init()
+    @State private var vm: UploadPickerViewModel = .init()
     @Binding var tab: MainTabView.TabIdentifier
     
     var body: some View {
@@ -47,7 +47,7 @@ struct UploadPostView: View {
             
             /// post image and caption
             HStack(spacing: spacing) {
-                if let image = vm.postImage {
+                if let image = vm.image {
                      image
                         .resizable()
                         .scaledToFill()
@@ -77,7 +77,7 @@ struct UploadPostView: View {
     private func reset() {
         caption = ""
         vm.selectedImage = nil
-        vm.postImage = nil
+        vm.image = nil
     }
     
     private let spacing: CGFloat = 8

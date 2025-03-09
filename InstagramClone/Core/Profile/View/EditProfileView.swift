@@ -12,9 +12,7 @@ struct EditProfileView: View {
     
     @Environment(\.dismiss) private var dismiss
     
-    @State private var selectedImage: PhotosPickerItem?
-    @State private var fullName: String = ""
-    @State private var bio: String = ""
+    @State private var photoPickerVM: EditPhotoPickerViewModel = .init()
     
     var body: some View {
         
@@ -46,8 +44,8 @@ struct EditProfileView: View {
             
             /// edit profile info
             VStack {
-                EditProfileRowView(title: "Name", placeholder: "Enter your name..", text: $fullName)
-                EditProfileRowView(title: "Bio", placeholder: "Enter your bio..", text: $bio)
+                EditProfileRowView(title: "Name", placeholder: "Enter your name..", text: $photoPickerVM.fullName)
+                EditProfileRowView(title: "Bio", placeholder: "Enter your bio..", text: $photoPickerVM.bio)
             }
             Spacer()
         }
@@ -70,16 +68,14 @@ struct EditProfileView: View {
     }
     
     private var photoPicker: some View {
-        PhotosPicker(selection: $selectedImage) {
+        
+        PhotosPicker(selection: $photoPickerVM.selectedImage) {
             VStack {
-                Image(systemName: "person")
-                    .resizable()
-                    .frame(
-                        width: photoPickerWidth,
-                        height: photoPickerHeight)
-                    .foregroundStyle(.white)
-                    .background(.gray)
-                    .clipShape(Circle())
+                if let image = photoPickerVM.image {
+                    styledImage(image)
+                } else {
+                    styledImage(Image(systemName: "person"))
+                }
                 
                 Text("Edit profile picture")
                     .font(.footnote)
@@ -93,6 +89,16 @@ struct EditProfileView: View {
     private let photoPickerPadd: CGFloat = 8
     private let photoPickerWidth: CGFloat = 80
     private let photoPickerHeight: CGFloat = 80
+    
+    
+    func styledImage(_ image: Image) -> some View {
+        image
+            .resizable()
+            .frame(width: photoPickerWidth, height: photoPickerHeight)
+            .foregroundStyle(.white)
+            .background(.gray)
+            .clipShape(Circle())
+    }
 }
 
 struct EditProfileRowView: View {
