@@ -35,9 +35,13 @@ final class EditPhotoPickerViewModel: PickerViewModel {
     var fullName: String = ""
     var bio: String = ""
     
+    private var uiImage: UIImage?
+    
+    private let imageUploader: ImageUploader
     
     init(user: User) {
         self.user = user
+        imageUploader = ImageUploader(cloudinaryService: CloudinaryService())
     }
     
     
@@ -46,6 +50,7 @@ final class EditPhotoPickerViewModel: PickerViewModel {
               let data = try? await item.loadTransferable(type: Data.self),
               let uiImage = UIImage(data: data)
         else { return }
+        self.uiImage = uiImage
         await set(imageOf: Image(uiImage: uiImage))
     }
     
@@ -55,28 +60,47 @@ final class EditPhotoPickerViewModel: PickerViewModel {
     }
     
     func updateUserData() async throws {
-        let trimmedFullName = fullName.trimmed
-        let trimmedBio = bio.trimmed
         
         var data: [String: Any] = [:]
         
+        /// update profile image if changed
+        if let image = uiImage {
+          
+            let imageURL = try? await imageUploader.upload(image: image)
+            data["profileImageURL"] = imageURL
+            print("DEBUG: image successfully saved on \(String(describing: imageURL))")
+            
+        }
+        
+        /// dlelete spaces if needed
+        let trimmedFullName = fullName.trimmed
+        let trimmedBio = bio.trimmed
+        
+        
+        /// update name if changed
         if isChanged(newData: trimmedFullName, oldData: user.fullname) {
             data["fullname"] = trimmedFullName
         }
         
+        /// update bio if changed
         if isChanged(newData: trimmedBio, oldData: user.bio) {
             data["bio"] = trimmedBio
         }
         
         if !data.isEmpty {
-            try await Firestore
-                .firestore()
-                .collection("users")
-                .document(user.id)
-                .updateData(data)
+            print("DEBUG: Data to update: \(data)")
+            try await updateFirestore(with: data)
         }
     }
     
+    private func updateFirestore(with data: [String: Any]) async throws {
+        try await Firestore
+            .firestore()
+            .collection("users")
+            .document(user.id)
+            .updateData(data)
+        print("DEBUG: User data updated successfully")
+    }
     
     private func isChanged(newData: String, oldData: String?) -> Bool {
         !newData.isEmpty && newData != (oldData?.trimmed ?? "")
@@ -89,3 +113,4 @@ extension String {
         trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
+

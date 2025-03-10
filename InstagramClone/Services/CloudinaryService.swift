@@ -9,31 +9,38 @@ import Foundation
 
 
 protocol CloudinaryServiceProtocol {
-    func upload(from data: Data, for userID: String) async throws -> String
+    func upload(from data: Data, fileName: String) async throws -> String
 }
-
 
 
 
 final class CloudinaryService: CloudinaryServiceProtocol {
     
-    private let uploader: CloudUploader
     
+    private let cloudName: String
+    private let uploadPreset: String
     
-    init(uploader: CloudUploader) {
-        self.uploader = uploader
+    init(
+        cloudName: String = "dst5mziip",
+        uploadPreset: String = "1234rrr"
+    ) {
+        self.cloudName = cloudName
+        self.uploadPreset = uploadPreset
     }
     
-    func upload(from data: Data, for userID: User.ID) async throws -> String {
+    
+    func upload(from data: Data, fileName: String) async throws -> String {
         
-        let request = uploader.createUploadRequest(imageData: data, userID: userID)
+        let request = try CloudinaryRequestBuilder(cloudName: cloudName, uploadPreset: uploadPreset, imageData: data, fileName: fileName, imageType: "jpeg").build()
+        
         let (data, _) = try await URLSession.shared.data(for: request)
-        
+       
         if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
            let secureUrl = json["secure_url"] as? String {
-            return secureUrl
+           return secureUrl
         } else {
             throw URLError(.badServerResponse)
         }
     }
 }
+

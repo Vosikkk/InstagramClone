@@ -5,40 +5,32 @@
 //  Created by Саша Восколович on 04.03.2025.
 //
 
-import Foundation
+import Firebase
 
 protocol ImageRepositoryProtocol {
-    func uploadImage(data: Data, for userID: String) async throws -> String
+    func upload(image: UIImage) async throws -> String?
     func getImages(for userID: String) async throws -> [String]
 }
 
-protocol StorageServiceProtocol {
-    func saveImageURL(for userID: String, imageURL: String) async throws
-    func fetchImageURLs(for userID: String) async throws -> [String]
-}
 
-
-final class ImageRepository: ImageRepositoryProtocol {
-    
+final class ImageUploader: ImageRepositoryProtocol {
     
     private let cloudinaryService: CloudinaryServiceProtocol
-    private let firestoreService: StorageServiceProtocol
+   
     
-    init(
-        cloudinaryService: CloudinaryServiceProtocol,
-        firestoreService: StorageServiceProtocol)
-    {
-        
+    init(cloudinaryService: CloudinaryServiceProtocol) {
         self.cloudinaryService = cloudinaryService
-        self.firestoreService = firestoreService
     }
     
     
-    func uploadImage(data: Data, for userID: String) async throws -> String {
-        ""
+    func upload(image: UIImage) async throws -> String? {
+        guard let imageData = image.jpegData(compressionQuality: 0.5) else { return nil }
+        let fileName = UUID().uuidString
+        return try await cloudinaryService.upload(from: imageData, fileName: fileName)
     }
     
     func getImages(for userID: String) async throws -> [String] {
         [""]
     }
 }
+
