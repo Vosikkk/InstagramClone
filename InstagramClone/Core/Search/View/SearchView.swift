@@ -17,15 +17,10 @@ struct SearchView: View {
     var body: some View {
         NavigationStack(path: $router.path) {
             ScrollView {
-                LazyVStack(spacing: Constants.lazyVSpacing) {
+                LazyVStack(spacing: lazyVSpacing) {
                     ForEach(searchVM.users) { user in
                             HStack {
-                                Image(systemName: "person.circle")
-                                    .profileStyle()
-                                    .frame(
-                                        width: Constants.Icon.width,
-                                        height: Constants.Icon.height
-                                    )
+                                CircuralProfileImageView(profileImageURL: user.profileImageURL, size: .xSmall)
                                 
                                 VStack(alignment: .leading) {
                                     Text(user.username)
@@ -44,7 +39,7 @@ struct SearchView: View {
                             }
                         }
                 }
-                .padding(.top, Constants.lazyVPadding)
+                .padding(.top, lazyVPadding)
                 .searchable(text: $searchText)
             }
             .navigationTitle("Explore")
@@ -54,21 +49,11 @@ struct SearchView: View {
             }
         }
     }
+    
+    private let lazyVSpacing: CGFloat = 12
+    private let lazyVPadding: CGFloat = 8
 }
 
-private extension SearchView {
-    
-    struct Constants {
-        
-        static let lazyVSpacing: CGFloat = 12
-        static let lazyVPadding: CGFloat = 8
-        
-        struct Icon {
-            static let width: CGFloat = 40
-            static let height: CGFloat = 40
-        }
-    }
-}
 
 #Preview {
     SearchView()

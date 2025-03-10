@@ -66,6 +66,7 @@ struct EditProfileView: View {
         Button {
             Task {
                 try await photoPickerVM.updateUserData()
+                dismiss()
             }
         } label: {
             Text("Done")
@@ -81,7 +82,7 @@ struct EditProfileView: View {
                 if let image = photoPickerVM.image {
                     styledImage(image)
                 } else {
-                    styledImage(Image(systemName: "person"))
+                    CircuralProfileImageView(profileImageURL: photoPickerVM.user.profileImageURL, size: .large)
                 }
                 
                 Text("Edit profile picture")

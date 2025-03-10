@@ -16,16 +16,7 @@ struct ProfileHeaderView<Button: View>: View {
     var body: some View {
         HStack {
             ZStack {
-                Group {
-                    if let image {
-                        Image(image)
-                            .profileStyle()
-                           
-                    } else {
-                        Color.clear
-                    }
-                }
-                .frame(width: imageWidth, height: imageHeight)
+                CircuralProfileImageView(profileImageURL: image, size: .large)
                 
                 if let button = addStoryButton {
                     button()
@@ -40,7 +31,7 @@ struct ProfileHeaderView<Button: View>: View {
                 }
             }
         }
-        .padding(.horizontal, padd)
+        .padding(.horizontal, padding)
     }
     
     
@@ -50,7 +41,7 @@ struct ProfileHeaderView<Button: View>: View {
     private let imageWidth: CGFloat = 80
     private let imageHeight: CGFloat = 80
     private let spacing: CGFloat = 8
-    private let padd: CGFloat = 12
+    private let padding: CGFloat = 12
 }
 
 #Preview {

@@ -21,6 +21,9 @@ protocol PickerViewModel {
 @Observable
 final class EditPhotoPickerViewModel: PickerViewModel {
    
+    
+    // MARK: Properties
+    
     var user: User
     
     var selectedImage: PhotosPickerItem? {
@@ -37,39 +40,30 @@ final class EditPhotoPickerViewModel: PickerViewModel {
     
     private var uiImage: UIImage?
     
-    private let imageUploader: ImageUploader
+    private let imageUploader: UploadImageService
+    
+    
+    // MARK: Init
     
     init(user: User) {
         self.user = user
-        imageUploader = ImageUploader(cloudinaryService: CloudinaryService())
+        imageUploader = CloudinaryService()
+        setFieldsOf(user)
     }
     
-    
-    private func loadImage(from item: PhotosPickerItem?) async {
-        guard let item,
-              let data = try? await item.loadTransferable(type: Data.self),
-              let uiImage = UIImage(data: data)
-        else { return }
-        self.uiImage = uiImage
-        await set(imageOf: Image(uiImage: uiImage))
-    }
-    
-    @MainActor
-    private func set(imageOf image: Image) {
-        self.image = image
-    }
     
     func updateUserData() async throws {
         
         var data: [String: Any] = [:]
         
         /// update profile image if changed
-        if let image = uiImage {
-          
-            let imageURL = try? await imageUploader.upload(image: image)
-            data["profileImageURL"] = imageURL
-            print("DEBUG: image successfully saved on \(String(describing: imageURL))")
+        if let image = uiImage, let imageData = image.jpegData(compressionQuality: 0.5) {
             
+            let imageURL = try? await imageUploader.upload(from: imageData, fileName: UUID().uuidString)
+            
+            data["profileImageURL"] = imageURL
+            
+            print("DEBUG: image successfully saved on \(String(describing: imageURL))")
         }
         
         /// dlelete spaces if needed
@@ -93,6 +87,16 @@ final class EditPhotoPickerViewModel: PickerViewModel {
         }
     }
     
+    
+    /// Because I want that only UI things on Main
+    @MainActor
+    private func set(imageOf image: Image) {
+        self.image = image
+    }
+    
+    
+    // MARK: - Helpers
+    
     private func updateFirestore(with data: [String: Any]) async throws {
         try await Firestore
             .firestore()
@@ -102,10 +106,32 @@ final class EditPhotoPickerViewModel: PickerViewModel {
         print("DEBUG: User data updated successfully")
     }
     
+    private func loadImage(from item: PhotosPickerItem?) async {
+        guard let item,
+              let data = try? await item.loadTransferable(type: Data.self),
+              let uiImage = UIImage(data: data)
+        else { return }
+        self.uiImage = uiImage
+        await set(imageOf: Image(uiImage: uiImage))
+    }
+    
+    
+    private func setFieldsOf(_ user: User) {
+        if let fullName = user.fullname {
+            self.fullName = fullName
+        }
+        
+        if let bio = user.bio {
+            self.bio = bio
+        }
+    }
+    
     private func isChanged(newData: String, oldData: String?) -> Bool {
         !newData.isEmpty && newData != (oldData?.trimmed ?? "")
     }
 }
+
+
 
 
 extension String {

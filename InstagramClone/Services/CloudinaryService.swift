@@ -8,13 +8,13 @@
 import Foundation
 
 
-protocol CloudinaryServiceProtocol {
+protocol UploadImageService {
     func upload(from data: Data, fileName: String) async throws -> String
 }
 
 
 
-final class CloudinaryService: CloudinaryServiceProtocol {
+final class CloudinaryService: UploadImageService {
     
     
     private let cloudName: String
@@ -31,7 +31,7 @@ final class CloudinaryService: CloudinaryServiceProtocol {
     
     func upload(from data: Data, fileName: String) async throws -> String {
         
-        let request = try CloudinaryRequestBuilder(cloudName: cloudName, uploadPreset: uploadPreset, imageData: data, fileName: fileName, imageType: "jpeg").build()
+        let request = try CloudinaryRequestBuilder(cloudName: cloudName, uploadPreset: uploadPreset, imageData: data, fileName: fileName, imageType: "jpg").build()
         
         let (data, _) = try await URLSession.shared.data(for: request)
        
