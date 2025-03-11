@@ -9,6 +9,8 @@ import SwiftUI
 
 struct FeedView: View {
     
+    @State private var fetchPostsVM: FetchViewModel = FetchViewModel(service: PostService())
+    
     var body: some View {
         NavigationStack {
             ScrollView {

@@ -10,7 +10,7 @@ import SwiftUI
 struct SearchView: View {
     
     @State private var router = SearchNavigationRouter()
-    @State private var searchVM = SearchViewModel()
+    @State private var searchVM = FetchViewModel(service: UserService())
     
     @State private var searchText: String = ""
     
@@ -18,7 +18,7 @@ struct SearchView: View {
         NavigationStack(path: $router.path) {
             ScrollView {
                 LazyVStack(spacing: lazyVSpacing) {
-                    ForEach(searchVM.users) { user in
+                    ForEach(searchVM.data) { user in
                             HStack {
                                 CircuralProfileImageView(profileImageURL: user.profileImageURL, size: .xSmall)
                                 
