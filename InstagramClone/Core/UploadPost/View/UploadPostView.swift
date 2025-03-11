@@ -23,7 +23,6 @@ struct UploadPostView: View {
             HStack {
                 Button {
                     reset()
-                    tab = .feed
                 } label: {
                     Text("Cancel")
                 }
@@ -36,7 +35,10 @@ struct UploadPostView: View {
                 Spacer()
                 
                 Button {
-                    print("upload")
+                    Task {
+                        await vm.uploadPost(caption: caption)
+                        reset()
+                    }
                 } label: {
                     Text("Upload")
                         .fontWeight(.semibold)
@@ -78,6 +80,7 @@ struct UploadPostView: View {
         caption = ""
         vm.selectedImage = nil
         vm.image = nil
+        tab = .feed
     }
     
     private let spacing: CGFloat = 8

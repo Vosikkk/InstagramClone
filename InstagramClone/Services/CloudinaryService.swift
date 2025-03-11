@@ -31,7 +31,13 @@ final class CloudinaryService: UploadImageService {
     
     func upload(from data: Data, fileName: String) async throws -> String {
         
-        let request = try CloudinaryRequestBuilder(cloudName: cloudName, uploadPreset: uploadPreset, imageData: data, fileName: fileName, imageType: "jpg").build()
+        let request = try CloudinaryRequestBuilder(
+            cloudName: cloudName,
+            uploadPreset: uploadPreset,
+            imageData: data,
+            fileName: fileName,
+            imageType: "jpg")
+            .build()
         
         let (data, _) = try await URLSession.shared.data(for: request)
        
