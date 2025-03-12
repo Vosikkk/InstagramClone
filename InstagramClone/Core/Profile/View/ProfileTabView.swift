@@ -6,12 +6,20 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ProfileTabView: View {
     
+    
+    @State private var postFetcher: PostGridViewModel
+   
     @Binding var selectedTab: Int
     
-    var posts: [Post]
+  
+    init(user: User, selectedTab: Binding<Int>) {
+        postFetcher = .init(user: user, service: PostService())
+        self._selectedTab = selectedTab
+    }
     
     private let gridItems = Array(repeating: GridItem(.flexible(), spacing: 1), count: 3)
     
@@ -31,8 +39,8 @@ struct ProfileTabView: View {
             switch selectedTab {
             case 0:
                 LazyVGrid(columns: gridItems, spacing: spacing) {
-                    ForEach(posts) { post in
-                        Image(post.imageUrl)
+                    ForEach(postFetcher.posts) { post in
+                        KFImage(URL(string: post.imageUrl))
                             .resizable()
                             .scaledToFill()
                             .frame(width: imageDimension - spacing, height: imageDimension - spacing)
@@ -51,5 +59,5 @@ struct ProfileTabView: View {
 }
 
 #Preview {
-    ProfileTabView(selectedTab: .constant(0), posts: Post.MOCK_POST)
+    ProfileTabView(user: User.MOCK_USERS[0], selectedTab: .constant(0))
 }

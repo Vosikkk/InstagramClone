@@ -22,18 +22,5 @@ final class FeedViewModel<Service: Fetchable & UserFetch> where Service.Model ==
     
     func fetchPost() async throws {
         posts = try await service.fetch()
-
-        try await withThrowingTaskGroup(of: (Int, User).self) { group in
-            for (index, post) in posts.enumerated() {
-                group.addTask {
-                    let user = try await self.service.fetchBy(post.ownerUid)
-                    return (index, user)
-                }
-            }
-            
-            for try await (index, user) in group {
-                posts[index].user = user
-            }
-        }
     }
 }

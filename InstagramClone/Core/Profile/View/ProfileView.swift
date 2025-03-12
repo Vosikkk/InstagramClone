@@ -18,10 +18,6 @@ struct ProfileView: View {
     }
     
     
-    var posts: [Post] {
-        Post.MOCK_POST.filter { $0.user == user }
-    }
-    
     let numbers: [Int] = [123, 23, 15]
     
     private let gridItems: [GridItem] = [
@@ -38,7 +34,7 @@ struct ProfileView: View {
                 
                 ProfileHeadView(of: user, addStoryButton: false)
                 
-                ProfileTabView(selectedTab: $selectedTab, posts: posts)
+                ProfileTabView(user: user, selectedTab: $selectedTab)
             }
             .navigationBarBackButtonHidden()
             .navigationTitle("Profile")

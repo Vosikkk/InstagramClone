@@ -16,20 +16,15 @@ struct CurrentProfileView: View {
     let numbers: [Int] = [123, 23, 15]
     
     
-    
-    var posts: [Post] {
-        Post.MOCK_POST.filter { $0.user == authViewModel.user }
-    }
-    
     var body: some View {
         NavigationStack {
             
             ScrollView {
                 if let user = authViewModel.user {
                     ProfileHeadView(of: user, addStoryButton: true)
+                    
+                    ProfileTabView(user: user, selectedTab: $selectedTab)
                 }
-                
-                ProfileTabView(selectedTab: $selectedTab, posts: posts)
             }
             .navigationBarBackButtonHidden()
             .navigationTitle("Profile")
