@@ -6,20 +6,34 @@
 //
 
 import Observation
-import Firebase
+
 
 @Observable
-final class FeedViewModel<Service: Fetchable> {
+final class FeedViewModel<Service: Fetchable & UserFetch> where Service.Model == Post {
     
-    private(set) var posts: [Service.Model] = []
+    var posts: [Service.Model] = []
     
     private let service: Service
     
     init(service: Service) {
         self.service = service
+        Task { try await fetchPost() }
     }
     
     func fetchPost() async throws {
         posts = try await service.fetch()
+
+        try await withThrowingTaskGroup(of: (Int, User).self) { group in
+            for (index, post) in posts.enumerated() {
+                group.addTask {
+                    let user = try await self.service.fetchBy(post.ownerUid)
+                    return (index, user)
+                }
+            }
+            
+            for try await (index, user) in group {
+                posts[index].user = user
+            }
+        }
     }
 }

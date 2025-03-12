@@ -18,7 +18,7 @@ struct SearchView: View {
         NavigationStack(path: $router.path) {
             ScrollView {
                 LazyVStack(spacing: lazyVSpacing) {
-                    ForEach(searchVM.data) { user in
+                    ForEach(searchVM.items) { user in
                             HStack {
                                 CircuralProfileImageView(profileImageURL: user.profileImageURL, size: .xSmall)
                                 

@@ -13,8 +13,10 @@ final class FirebaseAuthService {
     @Published var userSession: FirebaseAuth.User?
     @Published var currentUser: User?
     
+    private let userService: UserFetch
     
-    init() {
+    init(service: UserFetch = UserService()) {
+        userService = service
         Task { try? await loadUserData() }
     }
     
@@ -44,8 +46,7 @@ final class FirebaseAuthService {
     func loadUserData() async throws {
         await setSessionFor(Auth.auth().currentUser)
         guard let currentUid = userSession?.uid else { return }
-        let snapshot = try await Firestore.firestore().collection("users").document(currentUid).getDocument()
-        await updateUserUI(try? snapshot.data(as: User.self))
+        await updateUserUI(try await userService.fetchBy(currentUid))
     }
     
     
@@ -62,7 +63,11 @@ final class FirebaseAuthService {
         await updateUserUI(user)
         guard let encodedUser = try? Firestore.Encoder().encode(user) else { return }
         
-        try? await Firestore.firestore().collection("users").document(user.id).setData(encodedUser)
+        try? await Firestore
+            .firestore()
+            .collection("users")
+            .document(user.id)
+            .setData(encodedUser)
     }
     
     @MainActor

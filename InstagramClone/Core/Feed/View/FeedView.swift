@@ -9,13 +9,12 @@ import SwiftUI
 
 struct FeedView: View {
     
-    @State private var fetchPostsVM: FetchViewModel = FetchViewModel(service: PostService())
-    
+    @State private var fetchPostsVM: FeedViewModel<PostService> = FeedViewModel(service: PostService())
     var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: Constants.lazyVSpacing) {
-                    ForEach(Post.MOCK_POST) {
+                    ForEach(fetchPostsVM.posts) {
                         FeedCell(for: $0)
                     }
                 }

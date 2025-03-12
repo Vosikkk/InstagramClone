@@ -10,7 +10,7 @@ import Observation
 @Observable
 final class FetchViewModel<Service: Fetchable> {
     
-    var data: [Service.Model] = []
+    var items: [Service.Model] = []
     
     
     private let service: Service
@@ -22,7 +22,7 @@ final class FetchViewModel<Service: Fetchable> {
     }
     
     func fetch() async throws {
-        data = try await service.fetch()
+        items = try await service.fetch()
     }
 }
 
