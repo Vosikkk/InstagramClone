@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import FirebaseAuth
 
 protocol Fetchable {
     associatedtype Model: Decodable
@@ -16,10 +17,15 @@ protocol Fetchable {
 
 protocol UserFetch {
     func fetchBy(_ uid: String) async throws -> User
+    var currentUserUid: String? { get }
 }
 
 
 struct UserService: Fetchable, UserFetch {
+   
+    var currentUserUid: String? {
+        Auth.auth().currentUser?.uid
+    }
     
     
     func fetchBy(_ uid: String) async throws -> User {

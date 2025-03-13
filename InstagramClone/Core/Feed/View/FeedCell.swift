@@ -10,10 +10,13 @@ import Kingfisher
 
 struct FeedCell: View {
     
+    @State private var feedCellVM: FeedCellViewModel
+    
     let post: Post
     
     init(for post: Post) {
         self.post = post
+        feedCellVM = .init(post: post)
     }
     
     var body: some View {
@@ -44,9 +47,12 @@ struct FeedCell: View {
             HStack(spacing: Constants.hSpacing) {
                
                 makeButton(
-                    systemName: "heart",
-                    action: { print("Like") }
+                    systemName: feedCellVM.isLiked ? "heart.fill" : "heart",
+                    action: {  withAnimation {
+                        feedCellVM.like()
+                    } }
                 )
+                
                 
                 makeButton(
                     systemName: "bubble.right",
@@ -64,7 +70,7 @@ struct FeedCell: View {
             .padding(.top, Constants.buttTopPadding)
             .foregroundStyle(.black)
             
-            Text("\(post.likes) likes")
+            Text("\(feedCellVM.post.likeCount) likes")
                 .font(.footnote)
                 .fontWeight(.semibold)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -81,7 +87,7 @@ struct FeedCell: View {
             .padding(.top, Constants.topPadding)
             
             
-            Text("6h ago")
+            Text("\(post.timestamp.formattedDate())h ago")
                 .font(.footnote)
                 .foregroundStyle(.gray)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -120,7 +126,7 @@ private extension FeedCell {
     
     
 }
-
-#Preview {
-    FeedCell(for: Post.MOCK_POST[0])
-}
+//
+//#Preview {
+//    FeedCell(for: Post.MOCK_POST[0])
+//}

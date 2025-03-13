@@ -11,6 +11,11 @@ import FirebaseFirestore
 protocol UploadPostService {
     
     func upload(_ data: String...) async throws
+    
+}
+
+protocol UpdatePostService {
+    func update(id: String, data: [String: Any]) async throws
 }
 
 
@@ -18,7 +23,7 @@ final class FirebaseUploadPost: UploadPostService {
    
     
     func upload(_ data: String...) async throws {
-        
+    
         guard let uid = Auth.auth().currentUser?.uid else { throw ServiceError.noCurrent }
         guard data.count == 2 else { throw ServiceError.badType(expected: "Length 2", received: "Length: \(data.count)") }
         guard let caption = data.first, let imageURL = data.last else {
@@ -31,14 +36,16 @@ final class FirebaseUploadPost: UploadPostService {
             id: document.documentID,
             ownerUid: uid,
             caption: caption,
-            likes: 0,
+            likes: [:],
             imageUrl: imageURL,
-            timestamp: Timestamp()
+            timestamp: Timestamp(),
+            likeCount: 0
         )
-        
+
         guard let encodedPost = try? Firestore.Encoder().encode(post) else {
             throw ServiceError.encodeFail
         }
+    
         try await document.setData(encodedPost)
     }
 }
@@ -57,5 +64,16 @@ enum ServiceError: LocalizedError {
         case .noCurrent:
             return "Failed to get the current user."
         }
+    }
+}
+
+struct FireBaseUpdatePost: UpdatePostService {
+   
+    func update(id: String, data: [String : Any]) async throws {
+        try await Firestore
+            .firestore()
+            .collection("posts")
+            .document(id)
+            .updateData(data)
     }
 }

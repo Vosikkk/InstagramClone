@@ -47,13 +47,13 @@ final class UploadPickerViewModel: PickerViewModel {
     }
     
     func uploadPost(caption: String) async {
+    
         guard let uiImage,
                 let imageData = uiImage.jpegData(compressionQuality: 0.5),
                 let imageURL = try? await imageUploader.upload(
                     from: imageData,
                     fileName: UUID().uuidString
                 ) else { return }
-        
         do {
             try await postUploader.upload(caption, imageURL)
         } catch {

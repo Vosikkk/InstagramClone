@@ -31,6 +31,7 @@ final class CloudinaryService: UploadImageService {
     
     func upload(from data: Data, fileName: String) async throws -> String {
         
+        
         let request = try CloudinaryRequestBuilder(
             cloudName: cloudName,
             uploadPreset: uploadPreset,
@@ -41,8 +42,9 @@ final class CloudinaryService: UploadImageService {
         
         let (data, _) = try await URLSession.shared.data(for: request)
        
-        if let json = try? data.asDictionary(),
+        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
            let secureUrl = json["secure_url"] as? String {
+            print(secureUrl)
            return secureUrl
         } else {
             throw URLError(.badServerResponse)
@@ -51,12 +53,3 @@ final class CloudinaryService: UploadImageService {
 }
 
 
-extension Encodable {
-    
-    func asDictionary() throws -> [String: Any] {
-        let data = try JSONEncoder().encode(self)
-        guard let dictionary = try JSONSerialization.jsonObject(with: data) as? [String: Any] else { throw NSError() }
-        
-        return dictionary
-    }
-}

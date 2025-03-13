@@ -10,6 +10,8 @@ import SwiftUI
 struct FeedView: View {
     
     @State private var fetchPostsVM: FeedViewModel<PostService> = FeedViewModel(service: PostService())
+    
+    
     var body: some View {
         NavigationStack {
             ScrollView {

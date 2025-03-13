@@ -80,3 +80,11 @@ final class FirebaseAuthService {
         userSession = user
     }
 }
+extension Timestamp {
+    func formattedDate() -> String {
+        let date = self.dateValue()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMM yyyy, HH:mm"
+        return formatter.string(from: date)
+    }
+}

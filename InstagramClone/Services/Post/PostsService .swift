@@ -9,6 +9,11 @@ import Firebase
 
 
 struct PostService: Fetchable, UserFetch, PostFetch {
+    
+    var currentUserUid: String? {
+        userService.currentUserUid
+    }
+    
    
     
     private let userService: UserFetch
@@ -32,7 +37,7 @@ struct PostService: Fetchable, UserFetch, PostFetch {
             .getDocuments()
             .documents
             .compactMap { try? $0.data(as: Post.self) }
-        
+      
         try await update(&posts)
         
         return posts

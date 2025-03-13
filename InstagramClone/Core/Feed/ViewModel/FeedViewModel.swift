@@ -13,14 +13,20 @@ final class FeedViewModel<Service: Fetchable & UserFetch> where Service.Model ==
     
     var posts: [Service.Model] = []
     
+    
     private let service: Service
+    
     
     init(service: Service) {
         self.service = service
-        Task { try await fetchPost() }
+    
+        Task { try await fetchPost()
+            print(posts)
+        }
     }
     
     func fetchPost() async throws {
         posts = try await service.fetch()
     }
 }
+
