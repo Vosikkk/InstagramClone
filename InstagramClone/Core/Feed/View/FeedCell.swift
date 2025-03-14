@@ -10,7 +10,12 @@ import Kingfisher
 
 struct FeedCell: View {
     
+    
     @State private var feedCellVM: FeedCellViewModel
+    
+    @State private var likeAnimationViews: [LikeAnimationView] = []
+    
+    private let animationDuration: CGFloat = 1.0
     
     let post: Post
     
@@ -38,21 +43,41 @@ struct FeedCell: View {
             }
             .padding(.leading, Constants.buttLeadPadding)
             
-            KFImage(URL(string: post.imageUrl))
-                .resizable()
-                .scaledToFill()
-                .frame(height: 400)
-                .clipShape(Rectangle())
+            ZStack(alignment: .center) {
+                
+                    KFImage(URL(string: post.imageUrl))
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 400)
+                    .clipShape(Rectangle())
+                
+                ForEach(likeAnimationViews) { animation in
+                    animation
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(
+                                deadline: .now() + animationDuration
+                            ) {
+                                likeAnimationViews.removeFirst()
+                            }
+                        }
+                }
+            }
+            .onTapGesture(count: 2) {
+                didTapLike()
+            }
+            
+            
             
             HStack(spacing: Constants.hSpacing) {
                
                 makeButton(
                     systemName: feedCellVM.isLiked ? "heart.fill" : "heart",
-                    action: {  withAnimation {
-                        feedCellVM.like()
-                    } }
+                    action: {
+                        didTapLike()
+                    }
                 )
-                
+                .foregroundStyle(feedCellVM.isLiked ? .red : .black)
+                .animation(.easeInOut(duration: 0.3), value: feedCellVM.isLiked)
                 
                 makeButton(
                     systemName: "bubble.right",
@@ -96,6 +121,14 @@ struct FeedCell: View {
         }
     }
     
+    private func didTapLike() {
+        
+        feedCellVM.like()
+        
+        guard feedCellVM.isLiked else { return }
+        likeAnimationViews.append(LikeAnimationView(duration: animationDuration))
+    }
+    
     private func makeButton(
         systemName: String,
         action: @escaping () -> Void
@@ -123,10 +156,17 @@ private extension FeedCell {
             static let width: CGFloat = 40
         }
     }
-    
-    
 }
 //
 //#Preview {
 //    FeedCell(for: Post.MOCK_POST[0])
 //}
+
+
+
+
+
+
+
+
+
